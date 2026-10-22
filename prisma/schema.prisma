@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  name         String
+  type         String        // "INCOME" atau "EXPENSE"
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+}
+
+model Transaction {
+  id          String    @id @default(uuid())
+  amount      Float
+  type        String    // "INCOME" atau "EXPENSE"
+  description String
+  date        DateTime  @default(now())
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
